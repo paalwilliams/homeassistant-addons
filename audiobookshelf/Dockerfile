@@ -1,4 +1,4 @@
-FROM ghcr.io/advplyr/audiobookshelf:latest
+FROM ghcr.io/advplyr/audiobookshelf:2.29.0
 
 EXPOSE 80
 
