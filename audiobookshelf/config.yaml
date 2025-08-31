@@ -1,0 +1,21 @@
+name: AudiobookshelfDev
+version: "2.29.0"
+slug: audiobookshelf
+description: A self-hosted audiobook and podcast server.
+url: "https://github.com/paalwilliams/homeassistant-addons"
+arch:
+  - armhf
+  - armv7
+  - aarch64
+  - amd64
+  - i386
+init: false
+map:
+  - media:ro
+  - ssl:ro
+  - config:rw
+ports:
+  80/tcp: 13378
+environment:
+  METADATA_PATH: /data/abs-metadata
+  CONFIG_PATH: /data/abs-config
