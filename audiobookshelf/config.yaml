@@ -1,4 +1,4 @@
-name: AudiobookshelfDev
+name: Audiobookshelf
 version: "2.29.0"
 slug: audiobookshelf
 description: A self-hosted audiobook and podcast server.
