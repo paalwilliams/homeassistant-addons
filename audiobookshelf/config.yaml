@@ -11,7 +11,7 @@ arch:
   - i386
 init: false
 map:
-  - media:ro
+  - media:rw
   - ssl:ro
   - config:rw
 ports:
