@@ -12,8 +12,6 @@ arch:
 init: false
 map:
   - media:rw
-  - ssl:ro
-  - config:rw
 ports:
   80/tcp: 13378
 environment:
