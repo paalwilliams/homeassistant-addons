@@ -1,5 +1,5 @@
 name: Audiobookshelf
-version: "2.29.0"
+version: "2.29.1"
 slug: audiobookshelf
 description: A self-hosted audiobook and podcast server.
 url: "https://github.com/paalwilliams/homeassistant-addons"
