@@ -65,7 +65,7 @@ If you want to use a network drive please add it to homeassistant in Network Sto
 
 ## Disclaimers and copyright information
 
-I have just put the wrapper on the official Audiobookshelf docker image so it works as a home assistant addon. 
+This is a fork of [this project by bigred10151990](https://github.com/bigred10151990/audiobookshelfserver). Thanks to [bigred1015990](https://github.com/bigred10151990/audiobookshelfserver ) for the work.
 
 Audiobookshelf  Self-hosted audiobook server
 Copyright (C) 2021  advplyr
