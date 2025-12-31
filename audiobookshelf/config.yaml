@@ -27,7 +27,7 @@ schema:
   ACCESS_TOKEN_EXPIRY: int
   REFRESH_TOKEN_EXPIRY: int
 options:
-  BACKUP_PATH: /backup/audiobookshelfserver
+  BACKUP_PATH: /backup/audiobookshelf
   METADATA_PATH: /data/abs-metadata
   CONFIG_PATH: /data/abs-config
   ALLOW_CORS: 0
