@@ -1,19 +1,43 @@
 name: Audiobookshelf
-version: "2.31.0"
+version: "2.32.1"
 slug: audiobookshelf
+boot: manual
 description: A self-hosted audiobook and podcast server.
 url: "https://github.com/paalwilliams/homeassistant-addons"
 arch:
-  - armhf
-  - armv7
-  - aarch64
   - amd64
-  - i386
+  - aarch64
 init: false
 map:
   - media:rw
+  - addon_config:rw
+  - backup:rw
+  - share:rw
+panel_icon: book-music
+panel_title: AudioBookShelf
 ports:
   80/tcp: 13378
-environment:
+schema:
+  CONFIG_PATH: str
+  METADATA_PATH: str
+  BACKUP_PATH: str
+  ALLOW_CORS: int
+  ALLOW_IFRAME: int
+  TZ: str
+  ACCESS_TOKEN_EXPIRY: int
+  REFRESH_TOKEN_EXPIRY: int
+options:
+  BACKUP_PATH: /backup/audiobookshelfserver
   METADATA_PATH: /data/abs-metadata
   CONFIG_PATH: /data/abs-config
+  ALLOW_CORS: 0
+  ALLOW_IFRAME: 1
+  TZ: America/Los_Angeles
+  ACCESS_TOKEN_EXPIRY: 43200
+  REFRESH_TOKEN_EXPIRY: 604800
+webui: http://[HOST]:[PORT:13378]
+legacy: true
+ports_description:
+  13378/tcp: Web interface port
+
+
