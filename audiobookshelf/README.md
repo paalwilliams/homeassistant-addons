@@ -62,7 +62,7 @@ If you want to use a network drive please add it to homeassistant in Network Sto
 
 ## Disclaimers and copyright information
 
-This is a fork of [this project](https://github.com/bigred10151990/audiobookshelfserver) by [bigred10151990](https://github.com/bigred10151990).
+This is a fork of [this project](https://github.com/bigred10151990/audiobookshelfserver) by [bigred10151990](https://github.com/bigred10151990). All original licenses apply.
 
 Audiobookshelf  Self-hosted audiobook server
 Copyright (C) 2021  advplyr
