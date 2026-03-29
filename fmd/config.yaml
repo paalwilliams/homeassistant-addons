@@ -2,8 +2,9 @@ name: FMD
 version: "0.14.2"
 slug: fmd
 boot: manual
-description: Decentralised remote device location and control (vvxx)
+description: Decentralised remote device location and control (vvxxx)
 url: "https://github.com/paalwilliams/homeassistant-addons"
+init: true
 arch:
   - amd64
   - aarch64
