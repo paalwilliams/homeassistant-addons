@@ -11,4 +11,5 @@ COPY --chmod=755 run.sh /
 
 EXPOSE 8080
 
+ENTRYPOINT []
 CMD [ "/run.sh" ]
