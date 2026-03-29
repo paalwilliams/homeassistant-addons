@@ -17,6 +17,7 @@ config_export() {
 }
 
 # Database configuration
+config_export ROMM_DB_DRIVER
 config_export DB_HOST
 config_export DB_PORT
 config_export DB_NAME
