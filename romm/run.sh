@@ -46,4 +46,4 @@ config_export TZ
 mkdir -p "${ROMM_BASE_PATH}"
 
 echo "Starting RomM..."
-exec /entrypoint.sh
+exec /docker-entrypoint.sh /init
