@@ -42,8 +42,11 @@ config_export STEAMGRIDDB_API_KEY
 # Timezone
 config_export TZ
 
-# Ensure ROM base path exists
-mkdir -p "${ROMM_BASE_PATH}"
+# Ensure ROM base path and library subdirectory exist
+mkdir -p "${ROMM_BASE_PATH}/library"
+
+# Disable filesystem watcher if library is empty to avoid crash-looping
+export ENABLE_RESCAN_ON_FILESYSTEM_CHANGE="${ENABLE_RESCAN_ON_FILESYSTEM_CHANGE:-true}"
 
 echo "Starting RomM..."
 exec /docker-entrypoint.sh /init
