@@ -2,7 +2,7 @@ name: RomM
 version: "3.7.3"
 slug: romm
 boot: manual
-description: fix createA beautiful, powerful ROM manager for your retro game collection.
+description: fix port mapping A beautiful, powerful ROM manager for your retro game collection.
 url: "https://github.com/paalwilliams/homeassistant-addons"
 arch:
   - amd64
@@ -15,7 +15,7 @@ map:
 panel_icon: controller
 panel_title: RomM
 ports:
-  80/tcp: 8080
+  5000/tcp: 8080
 schema:
   ROMM_AUTH_SECRET_KEY: str
   ROMM_AUTH_USERNAME: str?
@@ -44,7 +44,7 @@ options:
   DB_PASSWD: ""
   ROMM_BASE_PATH: /media/romm
   TZ: America/Los_Angeles
-webui: http://[HOST]:[PORT:80]
+webui: http://[HOST]:[PORT:5000]
 legacy: true
 ports_description:
-  80/tcp: Web interface port
+  5000/tcp: Web interface port

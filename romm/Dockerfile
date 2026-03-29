@@ -9,7 +9,7 @@ LABEL io.hass.arch="aarch64|amd64"
 
 COPY --chmod=755 run.sh /
 
-EXPOSE 80
+EXPOSE 5000
 
 ENTRYPOINT []
 CMD [ "/run.sh" ]
