@@ -43,7 +43,6 @@ location / {
 
     proxy_set_header Referer $scheme://$host;
 
-    # optional but recommended
     add_header Referrer-Policy "strict-origin-when-cross-origin";
 }
 ```
