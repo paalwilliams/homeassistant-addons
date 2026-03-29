@@ -42,8 +42,14 @@ config_export STEAMGRIDDB_API_KEY
 # Timezone
 config_export TZ
 
-# Ensure ROMM config file exists so ROMM doesn't complain
-mkdir -p /romm/config
+# Persist ROMM data directories to /data (survives restarts)
+for dir in config assets resources; do
+    mkdir -p "/data/romm/${dir}"
+    # Copy any existing persistent data back into the container
+    cp -a "/data/romm/${dir}/." "/romm/${dir}/" 2>/dev/null || true
+done
+
+# Ensure config.yml exists
 if [ ! -f /romm/config/config.yml ]; then
     touch /romm/config/config.yml
 fi
@@ -69,5 +75,8 @@ export ROMM_BASE_PATH="/romm"
 # Disable filesystem watcher if library is empty to avoid crash-looping
 export ENABLE_RESCAN_ON_FILESYSTEM_CHANGE="${ENABLE_RESCAN_ON_FILESYSTEM_CHANGE:-true}"
 
+# Sync persistent data back to /data on shutdown
+trap 'for dir in config assets resources; do cp -a "/romm/${dir}/." "/data/romm/${dir}/" 2>/dev/null || true; done' EXIT
+
 echo "Starting RomM..."
-exec /docker-entrypoint.sh /init
+/docker-entrypoint.sh /init
