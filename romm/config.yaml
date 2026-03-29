@@ -1,0 +1,50 @@
+name: RomM
+version: "3.7.3"
+slug: romm
+boot: manual
+description: A beautiful, powerful ROM manager for your retro game collection.
+url: "https://github.com/paalwilliams/homeassistant-addons"
+arch:
+  - amd64
+  - aarch64
+init: false
+map:
+  - media:rw
+  - addon_config:rw
+  - share:rw
+panel_icon: controller
+panel_title: RomM
+ports:
+  8080/tcp: 8080
+schema:
+  ROMM_AUTH_SECRET_KEY: str
+  ROMM_AUTH_USERNAME: str?
+  ROMM_AUTH_PASSWORD: str?
+  DB_HOST: str
+  DB_PORT: int?
+  DB_NAME: str
+  DB_USER: str
+  DB_PASSWD: password
+  ROMM_BASE_PATH: str
+  IGDB_CLIENT_ID: str?
+  IGDB_CLIENT_SECRET: str?
+  SCREENSCRAPER_USER: str?
+  SCREENSCRAPER_PASSWORD: str?
+  MOBYGAMES_API_KEY: str?
+  STEAMGRIDDB_API_KEY: str?
+  TZ: str
+options:
+  ROMM_AUTH_SECRET_KEY: ""
+  ROMM_AUTH_USERNAME: admin
+  ROMM_AUTH_PASSWORD: ""
+  DB_HOST: core-mariadb
+  DB_PORT: 3306
+  DB_NAME: romm
+  DB_USER: romm
+  DB_PASSWD: ""
+  ROMM_BASE_PATH: /media/romm
+  TZ: America/Los_Angeles
+webui: http://[HOST]:[PORT:8080]
+legacy: true
+ports_description:
+  8080/tcp: Web interface port
