@@ -5,8 +5,7 @@ DB_DIR="/config/db"
 
 mkdir -p "$DB_DIR"
 
-# FMD server stores its database in /var/lib/fmd-server/db/
-# Symlink it to HA's addon_config directory so data persists across reinstalls
+# symlink /var/lib/fmd-server/db/ to addon_config directory so data persists across reinstalls
 rm -rf /var/lib/fmd-server/db
 mkdir -p /var/lib/fmd-server
 ln -s "$DB_DIR" /var/lib/fmd-server/db
