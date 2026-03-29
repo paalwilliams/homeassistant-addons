@@ -1,4 +1,4 @@
-#!/usr/bin/env bashio
+#!/bin/sh
 set -e
 
 mkdir -p /data/db
@@ -9,5 +9,5 @@ rm -rf /var/lib/fmd-server/db
 mkdir -p /var/lib/fmd-server
 ln -s /data/db /var/lib/fmd-server/db
 
-bashio::log.info "Starting FMD server..."
+echo "Starting FMD server..."
 exec fmd-server serve
