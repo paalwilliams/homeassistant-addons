@@ -38,6 +38,6 @@ options:
 webui: http://[HOST]:[PORT:13378]
 legacy: true
 ports_description:
-  13378/tcp: Web interface port
+  80/tcp: Web interface port
 
 
