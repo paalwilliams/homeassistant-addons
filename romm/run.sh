@@ -42,6 +42,13 @@ config_export STEAMGRIDDB_API_KEY
 # Timezone
 config_export TZ
 
+# Persist config and assets to addon_config so they survive restarts
+mkdir -p /config/romm/config /config/romm/assets /config/romm/resources
+rm -rf /romm/config /romm/assets /romm/resources 2>/dev/null || true
+ln -sf /config/romm/config /romm/config
+ln -sf /config/romm/assets /romm/assets
+ln -sf /config/romm/resources /romm/resources
+
 # Ensure library directory exists
 mkdir -p /romm/library
 
