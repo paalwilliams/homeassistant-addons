@@ -1,6 +1,6 @@
 ---
 build_from:
-  aarch64: rommapp/romm:3.7.3
-  amd64: rommapp/romm:3.7.3
+  aarch64: rommapp/romm:4.7.0
+  amd64: rommapp/romm:4.7.0
 codenotary:
   signer: paaa.al@proton.me
