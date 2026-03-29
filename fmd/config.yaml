@@ -1,5 +1,5 @@
 name: FMD 
-version: "0.14.0"
+version: "0.14.1"
 slug: fmd
 boot: manual
 description: Decentralised remote device location and control
