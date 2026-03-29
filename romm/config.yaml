@@ -2,7 +2,7 @@ name: RomM
 version: "4.7.0"
 slug: romm
 boot: manual
-description: persist images A beautiful, powerful ROM manager for your retro game collection.
+description: A beautiful, powerful ROM manager for your retro game collection.
 url: "https://github.com/paalwilliams/homeassistant-addons"
 arch:
   - amd64

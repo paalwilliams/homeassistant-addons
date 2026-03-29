@@ -28,8 +28,9 @@ config_export ROMM_AUTH_SECRET_KEY
 config_export ROMM_AUTH_USERNAME
 config_export ROMM_AUTH_PASSWORD
 
-# ROM library path
+# ROM library path (user-configured, e.g. /media/romm)
 config_export ROMM_BASE_PATH
+USER_LIBRARY="${ROMM_BASE_PATH}/library"
 
 # Metadata provider keys (optional)
 config_export IGDB_CLIENT_ID
@@ -42,41 +43,33 @@ config_export STEAMGRIDDB_API_KEY
 # Timezone
 config_export TZ
 
-# Persist ROMM data directories to /data (survives restarts)
-for dir in config assets resources; do
-    mkdir -p "/data/romm/${dir}"
-    # Copy any existing persistent data back into the container
-    cp -a "/data/romm/${dir}/." "/romm/${dir}/" 2>/dev/null || true
-done
+# Use /data/romm for persistent storage (assets, resources, config)
+export ROMM_BASE_PATH="/data/romm"
+mkdir -p /data/romm/config /data/romm/assets /data/romm/resources /data/romm/library
 
 # Ensure config.yml exists
-if [ ! -f /romm/config/config.yml ]; then
-    touch /romm/config/config.yml
+if [ ! -f /data/romm/config/config.yml ]; then
+    touch /data/romm/config/config.yml
 fi
 
-# Ensure library directory exists
-mkdir -p /romm/library
+# Repoint frontend symlinks to persistent storage so nginx serves saved assets
+ln -sf /data/romm/assets /var/www/html/assets/romm/assets
+ln -sf /data/romm/resources /var/www/html/assets/romm/resources
 
-# If user set a custom ROMM_BASE_PATH, symlink their library content into /romm/library
-if [ "${ROMM_BASE_PATH}" != "/romm" ] && [ -d "${ROMM_BASE_PATH}/library" ]; then
-    # Symlink each platform directory from user's library
-    for dir in "${ROMM_BASE_PATH}/library"/*; do
+# Symlink user's ROM library into persistent storage
+if [ -n "${USER_LIBRARY}" ] && [ -d "${USER_LIBRARY}" ]; then
+    for dir in "${USER_LIBRARY}"/*; do
         [ -e "$dir" ] || continue
         base="$(basename "$dir")"
-        if [ ! -e "/romm/library/$base" ]; then
-            ln -s "$dir" "/romm/library/$base"
+        if [ ! -e "/data/romm/library/$base" ]; then
+            ln -s "$dir" "/data/romm/library/$base"
         fi
     done
 fi
 
-# Force ROMM_BASE_PATH to /romm so nginx paths work
-export ROMM_BASE_PATH="/romm"
-
-# Disable filesystem watcher if library is empty to avoid crash-looping
-export ENABLE_RESCAN_ON_FILESYSTEM_CHANGE="${ENABLE_RESCAN_ON_FILESYSTEM_CHANGE:-true}"
-
-# Sync persistent data back to /data on shutdown
-trap 'for dir in config assets resources; do cp -a "/romm/${dir}/." "/data/romm/${dir}/" 2>/dev/null || true; done' EXIT
+# Nginx internal redirect expects /romm/library — symlink to persistent library
+rm -rf /romm/library 2>/dev/null || true
+ln -sf /data/romm/library /romm/library 2>/dev/null || true
 
 echo "Starting RomM..."
-/docker-entrypoint.sh /init
+exec /docker-entrypoint.sh /init
