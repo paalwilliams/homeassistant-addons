@@ -9,6 +9,7 @@ arch:
   - aarch64
 init: false
 map:
+  - data:rw
   - addon_config:rw
 panel_icon: map
 panel_title: FMD
