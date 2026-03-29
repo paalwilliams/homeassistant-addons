@@ -9,5 +9,7 @@ rm -rf /var/lib/fmd-server/db
 mkdir -p /var/lib/fmd-server
 ln -s /data/db /var/lib/fmd-server/db
 
+chown -R fmd-server:fmd-server /data/db
+
 echo "Starting FMD server..."
-exec fmd-server serve
+exec su -s /bin/sh fmd-server -c "/opt/fmd-server serve"

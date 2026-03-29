@@ -7,6 +7,8 @@ LABEL io.hass.version=${BUILD_VERSION}
 LABEL io.hass.type="addon" 
 LABEL io.hass.arch="aarch64|amd64"
 
+USER root
+
 COPY --chmod=755 run.sh /
 
 EXPOSE 8080
