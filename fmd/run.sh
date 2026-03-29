@@ -1,8 +1,7 @@
 #!/bin/sh
 set -e
 
-CONFIG_DIR="/addon_configs/fmd"
-DB_DIR="${CONFIG_DIR}/db"
+DB_DIR="/config/db"
 
 mkdir -p "$DB_DIR"
 
