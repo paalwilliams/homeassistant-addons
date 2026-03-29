@@ -2,7 +2,7 @@ name: RomM
 version: "3.7.3"
 slug: romm
 boot: manual
-description: fix port mapping again A beautiful, powerful ROM manager for your retro game collection.
+description: fix symlink A beautiful, powerful ROM manager for your retro game collection.
 url: "https://github.com/paalwilliams/homeassistant-addons"
 arch:
   - amd64

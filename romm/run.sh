@@ -45,6 +45,12 @@ config_export TZ
 # Ensure ROM base path and library subdirectory exist
 mkdir -p "${ROMM_BASE_PATH}/library"
 
+# Symlink /romm to ROMM_BASE_PATH so nginx internal redirects work
+if [ "${ROMM_BASE_PATH}" != "/romm" ]; then
+    rm -rf /romm
+    ln -s "${ROMM_BASE_PATH}" /romm
+fi
+
 # Disable filesystem watcher if library is empty to avoid crash-looping
 export ENABLE_RESCAN_ON_FILESYSTEM_CHANGE="${ENABLE_RESCAN_ON_FILESYSTEM_CHANGE:-true}"
 
