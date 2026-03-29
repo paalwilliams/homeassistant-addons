@@ -42,14 +42,23 @@ config_export STEAMGRIDDB_API_KEY
 # Timezone
 config_export TZ
 
-# Ensure ROM base path and library subdirectory exist
-mkdir -p "${ROMM_BASE_PATH}/library"
+# Ensure library directory exists
+mkdir -p /romm/library
 
-# Symlink /romm to ROMM_BASE_PATH so nginx internal redirects work
-if [ "${ROMM_BASE_PATH}" != "/romm" ]; then
-    rm -rf /romm
-    ln -s "${ROMM_BASE_PATH}" /romm
+# If user set a custom ROMM_BASE_PATH, symlink their library content into /romm/library
+if [ "${ROMM_BASE_PATH}" != "/romm" ] && [ -d "${ROMM_BASE_PATH}/library" ]; then
+    # Symlink each platform directory from user's library
+    for dir in "${ROMM_BASE_PATH}/library"/*; do
+        [ -e "$dir" ] || continue
+        base="$(basename "$dir")"
+        if [ ! -e "/romm/library/$base" ]; then
+            ln -s "$dir" "/romm/library/$base"
+        fi
+    done
 fi
+
+# Force ROMM_BASE_PATH to /romm so nginx paths work
+export ROMM_BASE_PATH="/romm"
 
 # Disable filesystem watcher if library is empty to avoid crash-looping
 export ENABLE_RESCAN_ON_FILESYSTEM_CHANGE="${ENABLE_RESCAN_ON_FILESYSTEM_CHANGE:-true}"
