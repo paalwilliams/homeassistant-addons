@@ -23,9 +23,27 @@
 
 This add-on runs [FMD](https://fmd-foss.org/) inside Home Assistant OS.
 
-This addon has access to the addon_config, backup, media, and share folders.  
+This addon has access to the addon_config folder.
 
 ## Installation
 [![Open your Home Assistant instance and show the add add-on repository dialog with a specific repository URL pre-filled.](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fpaalwilliams%2Fhomeassistant-addons)
 
 Install the **FMD** add-on from this repo and start it.
+
+Please note: you will need to use a reverse proxy in order for this to work. I recommend [Nginx Proxy Manager](https://github.com/hassio-addons/addon-nginx-proxy-manager).
+To fix the 403 error with OSM, you will need to add some custom configuration in the `advanced` section of your Proxy Host. 
+
+```
+location / {
+    proxy_pass $forward_scheme://$server:$port;
+
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+
+    proxy_set_header Referer $scheme://$host;
+
+    # optional but recommended
+    add_header Referrer-Policy "strict-origin-when-cross-origin";
+}
+```
