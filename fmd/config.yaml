@@ -2,7 +2,7 @@ name: FMD
 version: "0.14.2"
 slug: fmd
 boot: manual
-description: Decentralised remote device location and control  || root
+description: Decentralised remote device location and control  || persisstent storage
 url: "https://github.com/paalwilliams/homeassistant-addons"
 arch:
   - amd64
@@ -10,7 +10,6 @@ arch:
 init: true
 map:
   - addon_config:rw
-  - data:rw          # Persistent storage
 panel_icon: map
 panel_title: FMD
 ports:
