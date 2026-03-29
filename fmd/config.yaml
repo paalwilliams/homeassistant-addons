@@ -1,0 +1,22 @@
+name: FMD 
+version: "0.14.0"
+slug: fmd
+boot: manual
+description: Decentralised remote device location and control
+url: "https://github.com/paalwilliams/homeassistant-addons"
+arch:
+  - amd64
+  - aarch64
+init: false
+map:
+  - addon_config:rw
+panel_icon: map
+panel_title: FMD
+ports:
+  80/tcp: 8080
+webui: http://[HOST]:[PORT:8080]
+legacy: true
+ports_description:
+  8080/tcp: Web interface port
+
+
