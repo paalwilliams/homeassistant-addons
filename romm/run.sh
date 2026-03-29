@@ -1,49 +1,49 @@
-#!/usr/bin/env bashio
+#!/bin/sh
+set -e
+
+OPTIONS_FILE="/data/options.json"
+
+# Helper to read a config value from options.json
+config_get() {
+    python3 -c "import json; o=json.load(open('$OPTIONS_FILE')); v=o.get('$1',''); print(v if v is not None else '')"
+}
+
+# Helper to export a config value only if non-empty
+config_export() {
+    val="$(config_get "$1")"
+    if [ -n "$val" ]; then
+        export "$1"="$val"
+    fi
+}
 
 # Database configuration
-export DB_HOST="$(bashio::config 'DB_HOST')"
-export DB_PORT="$(bashio::config 'DB_PORT')"
-export DB_NAME="$(bashio::config 'DB_NAME')"
-export DB_USER="$(bashio::config 'DB_USER')"
-export DB_PASSWD="$(bashio::config 'DB_PASSWD')"
+config_export DB_HOST
+config_export DB_PORT
+config_export DB_NAME
+config_export DB_USER
+config_export DB_PASSWD
 
 # Auth configuration
-export ROMM_AUTH_SECRET_KEY="$(bashio::config 'ROMM_AUTH_SECRET_KEY')"
-if bashio::config.has_value 'ROMM_AUTH_USERNAME'; then
-    export ROMM_AUTH_USERNAME="$(bashio::config 'ROMM_AUTH_USERNAME')"
-fi
-if bashio::config.has_value 'ROMM_AUTH_PASSWORD'; then
-    export ROMM_AUTH_PASSWORD="$(bashio::config 'ROMM_AUTH_PASSWORD')"
-fi
+config_export ROMM_AUTH_SECRET_KEY
+config_export ROMM_AUTH_USERNAME
+config_export ROMM_AUTH_PASSWORD
 
 # ROM library path
-export ROMM_BASE_PATH="$(bashio::config 'ROMM_BASE_PATH')"
+config_export ROMM_BASE_PATH
 
 # Metadata provider keys (optional)
-if bashio::config.has_value 'IGDB_CLIENT_ID'; then
-    export IGDB_CLIENT_ID="$(bashio::config 'IGDB_CLIENT_ID')"
-fi
-if bashio::config.has_value 'IGDB_CLIENT_SECRET'; then
-    export IGDB_CLIENT_SECRET="$(bashio::config 'IGDB_CLIENT_SECRET')"
-fi
-if bashio::config.has_value 'SCREENSCRAPER_USER'; then
-    export SCREENSCRAPER_USER="$(bashio::config 'SCREENSCRAPER_USER')"
-fi
-if bashio::config.has_value 'SCREENSCRAPER_PASSWORD'; then
-    export SCREENSCRAPER_PASSWORD="$(bashio::config 'SCREENSCRAPER_PASSWORD')"
-fi
-if bashio::config.has_value 'MOBYGAMES_API_KEY'; then
-    export MOBYGAMES_API_KEY="$(bashio::config 'MOBYGAMES_API_KEY')"
-fi
-if bashio::config.has_value 'STEAMGRIDDB_API_KEY'; then
-    export STEAMGRIDDB_API_KEY="$(bashio::config 'STEAMGRIDDB_API_KEY')"
-fi
+config_export IGDB_CLIENT_ID
+config_export IGDB_CLIENT_SECRET
+config_export SCREENSCRAPER_USER
+config_export SCREENSCRAPER_PASSWORD
+config_export MOBYGAMES_API_KEY
+config_export STEAMGRIDDB_API_KEY
 
 # Timezone
-export TZ="$(bashio::config 'TZ')"
+config_export TZ
 
 # Ensure ROM base path exists
 mkdir -p "${ROMM_BASE_PATH}"
 
-bashio::log.info "Starting RomM..."
+echo "Starting RomM..."
 exec /entrypoint.sh
