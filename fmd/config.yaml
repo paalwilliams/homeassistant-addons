@@ -1,17 +1,18 @@
-name: FMD 
+name: FMD
 version: "0.14.2"
 slug: fmd
 boot: manual
-description: Decentralised remote device location and control (vvxxx)
+description: Decentralised remote device location and control xxxxxxxxxxxx
 url: "https://github.com/paalwilliams/homeassistant-addons"
-init: true
 arch:
   - amd64
   - aarch64
-init: false
+init: true
 map:
-  - data:rw
   - addon_config:rw
+  - data:rw          # Persistent storage
+environment:
+  FMD_DB_DIR: /data/db  # <- environment variable for the persistent database
 panel_icon: map
 panel_title: FMD
 ports:
@@ -20,5 +21,3 @@ webui: http://[HOST]:[PORT:8080]
 legacy: true
 ports_description:
   8080/tcp: Web interface port
-
-
