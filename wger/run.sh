@@ -62,27 +62,25 @@ export SYNC_EXERCISE_IMAGES_CELERY="True"
 export SYNC_EXERCISE_VIDEOS_CELERY="True"
 
 # Persistent media storage
-mkdir -p /data/wger/media
+mkdir -p /data/wger/media /data/wger/beat
+chown -R wger:wger /data/wger
 rm -rf /home/wger/media 2>/dev/null || true
 ln -sf /data/wger/media /home/wger/media
-
-# Persistent beat schedule
-mkdir -p /data/wger/beat
 ln -sf /data/wger/beat /home/wger/beat
 
 # Start Redis in the background
 redis-server --daemonize yes --bind 127.0.0.1 --port 6379 \
     --dir /var/lib/redis --pidfile /var/run/redis/redis.pid
 
-# Start Celery worker in the background
+# Start Celery worker in the background (as wger user)
 cd /home/wger/src
-celery -A wger worker --loglevel=info --detach \
+gosu wger celery -A wger worker --loglevel=info --detach \
     --pidfile=/tmp/celery-worker.pid --logfile=/tmp/celery-worker.log
 
-# Start Celery beat in the background
-celery -A wger beat --loglevel=info --detach \
+# Start Celery beat in the background (as wger user)
+gosu wger celery -A wger beat --loglevel=info --detach \
     --pidfile=/tmp/celery-beat.pid --logfile=/tmp/celery-beat.log \
     --schedule=/data/wger/beat/celerybeat-schedule
 
 echo "Starting wger..."
-exec /home/wger/entrypoint.sh
+exec gosu wger /home/wger/entrypoint.sh

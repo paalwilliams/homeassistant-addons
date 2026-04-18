@@ -9,11 +9,10 @@ LABEL io.hass.arch="aarch64|amd64"
 
 USER root
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends redis-server \
+    && apt-get install -y --no-install-recommends redis-server gosu \
     && rm -rf /var/lib/apt/lists/* \
     && mkdir -p /var/run/redis /var/lib/redis \
     && chown wger:wger /var/run/redis /var/lib/redis
-USER wger
 
 COPY --chmod=755 run.sh /
 
