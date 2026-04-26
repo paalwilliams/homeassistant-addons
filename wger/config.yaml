@@ -2,7 +2,7 @@ name: wger
 version: "2.5.0"
 slug: wger
 boot: manual
-description: A free, open source web application for managing your workouts and nutrition.
+description: boing A free, open source web application for managing your workouts and nutrition.
 url: "https://github.com/paalwilliams/homeassistant-addons"
 arch:
   - amd64
