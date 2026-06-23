@@ -1,0 +1,6 @@
+---
+build_from:
+  aarch64: rssbridge/rss-bridge:latest
+  amd64: rssbridge/rss-bridge:latest
+codenotary:
+  signer: paaa.al@proton.me

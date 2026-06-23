@@ -1,0 +1,24 @@
+name: RSS-Bridge
+version: "1.0.0"
+slug: rss-bridge
+boot: manual
+description: Self-hosted RSS-Bridge — generate RSS/Atom feeds for sites that lack them (Instagram, etc.).
+url: "https://github.com/paalwilliams/homeassistant-addons"
+arch:
+  - amd64
+  - aarch64
+init: false
+map:
+  - addon_config:rw
+ports:
+  80/tcp: 3000
+schema:
+  TZ: str?
+options:
+  TZ: America/Los_Angeles
+webui: http://[HOST]:[PORT:80]
+legacy: true
+ports_description:
+  80/tcp: Web interface port
+panel_icon: rss
+panel_title: RSS-Bridge
