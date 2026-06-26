@@ -3,6 +3,11 @@ set -e
 
 DB_DIR="/config/db"
 
+# Apply the configured timezone (defaults to UTC) so log timestamps are local
+TZ=$(sed -n 's/.*"timezone"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' /data/options.json 2>/dev/null)
+export TZ="${TZ:-UTC}"
+echo "Using timezone: $TZ"
+
 mkdir -p "$DB_DIR"
 
 # symlink /var/lib/fmd-server/db/ to addon_config directory so data persists across reinstalls

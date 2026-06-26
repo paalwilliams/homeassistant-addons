@@ -1,5 +1,5 @@
 name: FMD
-version: "0.15.0"
+version: "0.16.0"
 slug: fmd
 boot: manual
 description: Decentralised remote device location and control
@@ -18,3 +18,7 @@ webui: http://[HOST]:[PORT:8080]
 legacy: true
 ports_description:
   8080/tcp: Web interface port
+options:
+  timezone: UTC
+schema:
+  timezone: str

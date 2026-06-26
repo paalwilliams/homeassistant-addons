@@ -1,6 +1,6 @@
 ---
 build_from:
-  aarch64: registry.gitlab.com/fmd-foss/fmd-server:0.15.0
-  amd64: registry.gitlab.com/fmd-foss/fmd-server:0.15.0
+  aarch64: registry.gitlab.com/fmd-foss/fmd-server:0.16.0
+  amd64: registry.gitlab.com/fmd-foss/fmd-server:0.16.0
 codenotary:
   signer: paaa.al@proton.me
