@@ -20,6 +20,7 @@ RUN apt-get update \
     && chown -R wger:wger /var/lib/nginx /var/log/nginx
 
 COPY nginx.conf /etc/nginx/conf.d/wger.conf
+COPY --chmod=755 gen-jwt-keys.py /usr/local/bin/wger-gen-jwt-keys
 COPY --chmod=755 run.sh /
 
 EXPOSE 8000

@@ -9,7 +9,9 @@
 - Replace the `SIGNING_KEY` option, removed in wger 2.6, with `JWT_PRIVATE_KEY` /
   `JWT_PUBLIC_KEY`
 - Generate and persist `SECRET_KEY` and the JWT keypair on first start, so sessions
-  and tokens survive restarts
+  and tokens survive restarts. The keypair is generated directly instead of through
+  `manage.py`, so startup does not depend on the database or redis being reachable,
+  and is bounded by a timeout
 - Add a `CSRF_TRUSTED_ORIGINS` option
 
 ## 2.5.0

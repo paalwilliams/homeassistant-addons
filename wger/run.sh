@@ -99,10 +99,11 @@ ln -sfn "${DATA_DIR}/beat" /home/wger/beat
 
 cd /home/wger/src
 
-# JWT keypair, used by the mobile app. Generated once and then persisted
+# JWT keypair, used by the mobile app. Generated once and then persisted.
+# Bounded by a timeout so a failure here can never wedge the add-on's startup
 if [ -z "${JWT_PRIVATE_KEY:-}" ] || [ -z "${JWT_PUBLIC_KEY:-}" ]; then
     echo "No JWT keypair configured, generating one..."
-    jwt_output="$(gosu wger python3 manage.py generate-jwt-keys 2>/dev/null || true)"
+    jwt_output="$(timeout 120 gosu wger env HOME=/home/wger /usr/local/bin/wger-gen-jwt-keys || true)"
     jwt_private="$(echo "$jwt_output" | sed -n 's/^JWT_PRIVATE_KEY=//p')"
     jwt_public="$(echo "$jwt_output" | sed -n 's/^JWT_PUBLIC_KEY=//p')"
     if [ -n "$jwt_private" ] && [ -n "$jwt_public" ]; then
@@ -110,8 +111,10 @@ if [ -z "${JWT_PRIVATE_KEY:-}" ] || [ -z "${JWT_PUBLIC_KEY:-}" ]; then
         export JWT_PUBLIC_KEY="$jwt_public"
         persist_secret JWT_PRIVATE_KEY "$jwt_private"
         persist_secret JWT_PUBLIC_KEY "$jwt_public"
+        echo "Generated a JWT keypair, stored in ${SECRETS_FILE}"
     else
-        echo "WARNING: could not generate a JWT keypair, the mobile app will not be able to log in"
+        echo "WARNING: could not generate a JWT keypair, continuing anyway."
+        echo "WARNING: log in from the mobile app will not work until this is fixed."
     fi
 fi
 
@@ -120,11 +123,11 @@ redis-server --daemonize yes --bind 127.0.0.1 --port 6379 \
     --dir /var/lib/redis --pidfile /var/run/redis/redis.pid
 
 # Start Celery worker in the background (as wger user)
-gosu wger celery -A wger worker --loglevel=info --detach \
+gosu wger env HOME=/home/wger celery -A wger worker --loglevel=info --detach \
     --pidfile=/tmp/celery-worker.pid --logfile=/tmp/celery-worker.log
 
 # Start Celery beat in the background (as wger user)
-gosu wger celery -A wger beat --loglevel=info --detach \
+gosu wger env HOME=/home/wger celery -A wger beat --loglevel=info --detach \
     --pidfile=/tmp/celery-beat.pid --logfile=/tmp/celery-beat.log \
     --schedule="${DATA_DIR}/beat/celerybeat-schedule"
 
@@ -132,4 +135,4 @@ gosu wger celery -A wger beat --loglevel=info --detach \
 nginx
 
 echo "Starting wger..."
-exec gosu wger /home/wger/entrypoint.sh
+exec gosu wger env HOME=/home/wger /home/wger/entrypoint.sh
