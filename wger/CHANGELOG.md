@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.6.3
+
+- Preserve an incoming `X-Forwarded-Proto` instead of overwriting it with the
+  scheme of the connection into the bundled nginx. Behind an external reverse
+  proxy that terminates TLS, wger was told the request was http
+
 ## 2.6.2
 
 - Trust the forwarded headers the bundled nginx already sets
