@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.6.2
+
+- Trust the forwarded headers the bundled nginx already sets
+  (`X_FORWARDED_PROTO_HEADER_SET`, `USE_X_FORWARDED_HOST`). Without them wger
+  built absolute URLs from the wrong host, so API pagination links pointed
+  somewhere else and the mobile app warned about a server misconfiguration
+
 ## 2.6.1
 
 Add-on fixes, on the same upstream wger 2.6.0 image.

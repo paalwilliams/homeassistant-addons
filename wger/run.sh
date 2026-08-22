@@ -109,6 +109,13 @@ export WGER_USE_GUNICORN="True"
 export WGER_PORT="8001"
 export NUMBER_OF_PROXIES="1"
 
+# wger builds absolute URLs (api pagination links, mobile app endpoints) from
+# the request headers, but ignores the forwarded ones unless told to trust them.
+# Our nginx.conf sets Host, X-Forwarded-Proto and X-Forwarded-Host on every
+# request, and gunicorn is only reachable through it, so trusting them is safe
+export X_FORWARDED_PROTO_HEADER_SET="True"
+export USE_X_FORWARDED_HOST="True"
+
 # Bundled Redis for cache and Celery broker
 export DJANGO_CACHE_BACKEND="django_redis.cache.RedisCache"
 export DJANGO_CACHE_LOCATION="redis://127.0.0.1:6379/1"
