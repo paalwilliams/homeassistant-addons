@@ -1,8 +1,8 @@
 name: wger
-version: "2.6.0"
+version: "2.6.0-1"
 slug: wger
 boot: manual
-description: Boingo A free, open source web application for managing your workouts and nutrition.
+description: A free, open source web application for managing your workouts and nutrition.
 url: "https://github.com/paalwilliams/homeassistant-addons"
 arch:
   - amd64
