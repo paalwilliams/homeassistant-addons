@@ -1,5 +1,5 @@
 name: wger
-version: "2.6.4"
+version: "2.6.5"
 slug: wger
 boot: manual
 description: A free, open source web application for managing your workouts and nutrition.
@@ -25,6 +25,7 @@ schema:
   DJANGO_DB_PASSWORD: password
   ALLOW_REGISTRATION: bool?
   SYNC_EXERCISES_ON_STARTUP: bool?
+  WARMUP_EXERCISE_CACHE_ON_STARTUP: bool?
   DOWNLOAD_EXERCISE_IMAGES_ON_STARTUP: bool?
   ALLOW_GUEST_USERS: bool?
   SITE_URL: str?
@@ -43,6 +44,7 @@ options:
   DJANGO_DB_PASSWORD: ""
   ALLOW_REGISTRATION: true
   SYNC_EXERCISES_ON_STARTUP: false
+  WARMUP_EXERCISE_CACHE_ON_STARTUP: true
   DOWNLOAD_EXERCISE_IMAGES_ON_STARTUP: false
   ALLOW_GUEST_USERS: true
   SITE_URL: "http://homeassistant.local:8000"

@@ -42,6 +42,7 @@ config_export DJANGO_DB_PASSWORD
 # Application settings
 config_export ALLOW_REGISTRATION
 config_export SYNC_EXERCISES_ON_STARTUP
+config_export WARMUP_EXERCISE_CACHE_ON_STARTUP
 config_export DOWNLOAD_EXERCISE_IMAGES_ON_STARTUP
 config_export ALLOW_GUEST_USERS
 config_export SITE_URL
@@ -134,6 +135,11 @@ export USE_CELERY="True"
 export CELERY_BROKER="redis://127.0.0.1:6379/2"
 export CELERY_BACKEND="redis://127.0.0.1:6379/2"
 
+# Keep the exercise api cache warm. Without this every /exerciseinfo/ page is
+# computed on demand, which the mobile app pays for on every initial sync
+export CACHE_API_EXERCISES_CELERY="True"
+export CACHE_API_EXERCISES_CELERY_FORCE_UPDATE="True"
+
 # Sync exercises and images via Celery
 export SYNC_EXERCISES_CELERY="True"
 export SYNC_EXERCISE_IMAGES_CELERY="True"
@@ -184,6 +190,27 @@ gosu wger env HOME=/home/wger celery -A wger beat --loglevel=info --detach \
 
 # Start nginx in the background. It listens on 8000 and proxies to gunicorn
 nginx
+
+# The celery job that keeps the cache warm only runs weekly, so a fresh install
+# or one whose exercises just changed is cold until then. Warm it once in the
+# background, after the app answers, so startup is not delayed by it
+if [ "${WARMUP_EXERCISE_CACHE_ON_STARTUP:-True}" = "True" ]; then
+    (
+        for _ in $(seq 1 120); do
+            if wget -q --spider "http://127.0.0.1:${WGER_PORT}/api/v2/version/" 2>/dev/null; then
+                break
+            fi
+            sleep 5
+        done
+        echo "Warming the exercise api cache in the background..."
+        if gosu wger env HOME=/home/wger python3 /home/wger/src/manage.py \
+                warmup-exercise-api-cache >/dev/null 2>&1; then
+            echo "Exercise api cache warmed"
+        else
+            echo "WARNING: could not warm the exercise api cache"
+        fi
+    ) &
+fi
 
 echo "Starting wger..."
 exec gosu wger env HOME=/home/wger /home/wger/entrypoint.sh

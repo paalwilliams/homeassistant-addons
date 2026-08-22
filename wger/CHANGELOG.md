@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.6.5
+
+- Keep the exercise api cache warm (`CACHE_API_EXERCISES_CELERY`), and warm it
+  once in the background on startup. `/api/v2/exerciseinfo/` took 4.7s per page
+  against a cold cache versus 0.2s on wger.de, which the mobile app pays on
+  every page of its initial sync
+
 ## 2.6.4
 
 - Run gunicorn with 3 gthread workers instead of gunicorn's default single sync
