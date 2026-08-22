@@ -1,5 +1,21 @@
 # Changelog
 
+## 2.6.1
+
+Add-on fixes, on the same upstream wger 2.6.0 image.
+
+- Generate the JWT keypair directly instead of through `manage.py`, so startup
+  no longer loads django before the database is reachable, and bound it with a
+  timeout
+- Check that postgres is reachable and that the database can actually be opened
+  before starting. A wrong host, wrong password, missing database or missing
+  powersync publication now fails with postgres' own error, instead of hanging
+  or a hundred lines of traceback
+- Run a single gevent celery worker instead of a prefork pool per core
+- Add `SYNC_EXERCISES_ON_STARTUP` and `DOWNLOAD_EXERCISE_IMAGES_ON_STARTUP`,
+  so a fresh install does not wait up to a week for the celery job
+- Document the full database setup, including the powersync publication
+
 ## 2.6.0
 
 - Update to wger 2.6.0 and pin the upstream image tag (`latest` currently points at a
