@@ -20,6 +20,8 @@
 - Check for the powersync publication before starting. Migration `core.0023`
   needs superuser to create it, and failed with a hundred lines of traceback
 - Document the full database setup, including the publication
+- Add `SYNC_EXERCISES_ON_STARTUP` and `DOWNLOAD_EXERCISE_IMAGES_ON_STARTUP`
+  options, so a fresh install does not have to wait for the weekly celery job
 - Add a `CSRF_TRUSTED_ORIGINS` option
 
 ## 2.5.0

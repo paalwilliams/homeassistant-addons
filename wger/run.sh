@@ -41,6 +41,8 @@ config_export DJANGO_DB_PASSWORD
 
 # Application settings
 config_export ALLOW_REGISTRATION
+config_export SYNC_EXERCISES_ON_STARTUP
+config_export DOWNLOAD_EXERCISE_IMAGES_ON_STARTUP
 config_export ALLOW_GUEST_USERS
 config_export SITE_URL
 config_export CSRF_TRUSTED_ORIGINS

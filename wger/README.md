@@ -22,6 +22,14 @@ Based on the official [wger/server](https://hub.docker.com/r/wger/server) image
   authentication. Leave empty and a keypair is generated on first start and stored in
   `/data/wger/secrets.env`. Only set these if you are migrating an existing install.
 - **ALLOW_REGISTRATION**: Allow new user registration (default: true).
+- **SYNC_EXERCISES_ON_STARTUP**: Pull the exercise database from wger.de on every
+  start (default: false). A fresh install only has the snapshot baked into the
+  fixtures, and the Celery sync then runs weekly at a random time, so it can be
+  days before new exercises appear. Turn this on for the first start, or when you
+  need an exercise that is missing, then turn it off again — it adds a minute or
+  two to every startup.
+- **DOWNLOAD_EXERCISE_IMAGES_ON_STARTUP**: Same, for exercise images (default:
+  false). Slow, and only useful together with the option above.
 - **ALLOW_GUEST_USERS**: Allow guest access (default: true).
 - **SITE_URL**: The URL users will access wger at. Used to build absolute links to
   uploaded images, so set it to the address you actually use.
