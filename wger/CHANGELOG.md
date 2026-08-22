@@ -12,8 +12,9 @@
   and tokens survive restarts. The keypair is generated directly instead of through
   `manage.py`, so startup does not depend on the database or redis being reachable,
   and is bounded by a timeout
-- Check that postgres is reachable before starting, and set `PGCONNECT_TIMEOUT`, so
-  an unreachable database fails with a clear message instead of hanging silently
+- Check that postgres is reachable and that the database can actually be opened
+  before starting, and set `PGCONNECT_TIMEOUT`, so a wrong host, password or
+  missing database fails with postgres' own error instead of hanging silently
 - Run a single gevent celery worker, matching upstream, instead of forking a
   prefork pool per core
 - Add a `CSRF_TRUSTED_ORIGINS` option
