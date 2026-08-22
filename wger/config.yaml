@@ -1,8 +1,8 @@
 name: wger
-version: "2.5.0"
+version: "2.6.0"
 slug: wger
 boot: manual
-description: boing A free, open source web application for managing your workouts and nutrition.
+description: Boingo A free, open source web application for managing your workouts and nutrition.
 url: "https://github.com/paalwilliams/homeassistant-addons"
 arch:
   - amd64
@@ -14,8 +14,9 @@ map:
 ports:
   8000/tcp: 8000
 schema:
-  SECRET_KEY: str
-  SIGNING_KEY: str
+  SECRET_KEY: str?
+  JWT_PRIVATE_KEY: str?
+  JWT_PUBLIC_KEY: str?
   DJANGO_DB_ENGINE: list(django.db.backends.postgresql)?
   DJANGO_DB_HOST: str
   DJANGO_DB_PORT: int?
@@ -25,10 +26,12 @@ schema:
   ALLOW_REGISTRATION: bool?
   ALLOW_GUEST_USERS: bool?
   SITE_URL: str?
+  CSRF_TRUSTED_ORIGINS: str?
   TZ: str
 options:
   SECRET_KEY: ""
-  SIGNING_KEY: ""
+  JWT_PRIVATE_KEY: ""
+  JWT_PUBLIC_KEY: ""
   DJANGO_DB_ENGINE: django.db.backends.postgresql
   DJANGO_DB_HOST: ""
   DJANGO_DB_PORT: 5432
@@ -37,11 +40,12 @@ options:
   DJANGO_DB_PASSWORD: ""
   ALLOW_REGISTRATION: true
   ALLOW_GUEST_USERS: true
-  SITE_URL: "http://localhost:8000"
+  SITE_URL: "http://homeassistant.local:8000"
+  CSRF_TRUSTED_ORIGINS: "http://homeassistant.local:8000"
   TZ: America/Los_Angeles
 webui: http://[HOST]:[PORT:8000]
 legacy: true
 ports_description:
   8000/tcp: Web interface port
-panel_icon: weight-lifter
+panel_icon: mdi:weight-lifter
 panel_title: wger

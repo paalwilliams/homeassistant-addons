@@ -2,6 +2,10 @@
 set -e
 
 OPTIONS_FILE="/data/options.json"
+DATA_DIR="/data/wger"
+SECRETS_FILE="${DATA_DIR}/secrets.env"
+
+mkdir -p "${DATA_DIR}/media" "${DATA_DIR}/beat"
 
 # Helper to read a config value from options.json
 config_get() {
@@ -16,9 +20,16 @@ config_export() {
     fi
 }
 
-# Security keys
+# Previously generated secrets (see below), so they survive restarts
+if [ -f "$SECRETS_FILE" ]; then
+    # shellcheck disable=SC1090
+    . "$SECRETS_FILE"
+fi
+
+# Security keys. Anything set in the addon options wins over the generated ones
 config_export SECRET_KEY
-config_export SIGNING_KEY
+config_export JWT_PRIVATE_KEY
+config_export JWT_PUBLIC_KEY
 
 # Database configuration
 config_export DJANGO_DB_ENGINE
@@ -32,8 +43,26 @@ config_export DJANGO_DB_PASSWORD
 config_export ALLOW_REGISTRATION
 config_export ALLOW_GUEST_USERS
 config_export SITE_URL
+config_export CSRF_TRUSTED_ORIGINS
 config_export TZ
-export TIME_ZONE="${TZ}"
+if [ -n "${TZ:-}" ]; then
+    export TIME_ZONE="${TZ}"
+fi
+
+# Persist a secret so it stays stable across restarts
+persist_secret() {
+    touch "$SECRETS_FILE"
+    chmod 600 "$SECRETS_FILE"
+    echo "export $1='$2'" >> "$SECRETS_FILE"
+}
+
+# Django secret key. Without a stable one all sessions are invalidated on restart
+if [ -z "${SECRET_KEY:-}" ]; then
+    echo "No SECRET_KEY configured, generating one..."
+    SECRET_KEY="$(python3 -c 'import secrets; print(secrets.token_urlsafe(50))')"
+    export SECRET_KEY
+    persist_secret SECRET_KEY "$SECRET_KEY"
+fi
 
 # Run migrations automatically
 export DJANGO_PERFORM_MIGRATIONS="True"
@@ -43,8 +72,10 @@ export DJANGO_DEBUG="False"
 export DJANGO_CLEAR_STATIC_FIRST="False"
 export DJANGO_COLLECTSTATIC_ON_STARTUP="True"
 
-# Use gunicorn
+# Use gunicorn, behind the bundled nginx (which serves /static/ and /media/)
 export WGER_USE_GUNICORN="True"
+export WGER_PORT="8001"
+export NUMBER_OF_PROXIES="1"
 
 # Bundled Redis for cache and Celery broker
 export DJANGO_CACHE_BACKEND="django_redis.cache.RedisCache"
@@ -56,31 +87,49 @@ export CELERY_BROKER="redis://127.0.0.1:6379/2"
 export CELERY_BACKEND="redis://127.0.0.1:6379/2"
 
 # Sync exercises and images via Celery
-export WGER_INSTANCE="https://wger.de"
 export SYNC_EXERCISES_CELERY="True"
 export SYNC_EXERCISE_IMAGES_CELERY="True"
 export SYNC_EXERCISE_VIDEOS_CELERY="True"
 
 # Persistent media storage
-mkdir -p /data/wger/media /data/wger/beat
-chown -R wger:wger /data/wger
+chown -R wger:wger "$DATA_DIR"
 rm -rf /home/wger/media 2>/dev/null || true
-ln -sf /data/wger/media /home/wger/media
-ln -sf /data/wger/beat /home/wger/beat
+ln -sfn "${DATA_DIR}/media" /home/wger/media
+ln -sfn "${DATA_DIR}/beat" /home/wger/beat
+
+cd /home/wger/src
+
+# JWT keypair, used by the mobile app. Generated once and then persisted
+if [ -z "${JWT_PRIVATE_KEY:-}" ] || [ -z "${JWT_PUBLIC_KEY:-}" ]; then
+    echo "No JWT keypair configured, generating one..."
+    jwt_output="$(gosu wger python3 manage.py generate-jwt-keys 2>/dev/null || true)"
+    jwt_private="$(echo "$jwt_output" | sed -n 's/^JWT_PRIVATE_KEY=//p')"
+    jwt_public="$(echo "$jwt_output" | sed -n 's/^JWT_PUBLIC_KEY=//p')"
+    if [ -n "$jwt_private" ] && [ -n "$jwt_public" ]; then
+        export JWT_PRIVATE_KEY="$jwt_private"
+        export JWT_PUBLIC_KEY="$jwt_public"
+        persist_secret JWT_PRIVATE_KEY "$jwt_private"
+        persist_secret JWT_PUBLIC_KEY "$jwt_public"
+    else
+        echo "WARNING: could not generate a JWT keypair, the mobile app will not be able to log in"
+    fi
+fi
 
 # Start Redis in the background
 redis-server --daemonize yes --bind 127.0.0.1 --port 6379 \
     --dir /var/lib/redis --pidfile /var/run/redis/redis.pid
 
 # Start Celery worker in the background (as wger user)
-cd /home/wger/src
 gosu wger celery -A wger worker --loglevel=info --detach \
     --pidfile=/tmp/celery-worker.pid --logfile=/tmp/celery-worker.log
 
 # Start Celery beat in the background (as wger user)
 gosu wger celery -A wger beat --loglevel=info --detach \
     --pidfile=/tmp/celery-beat.pid --logfile=/tmp/celery-beat.log \
-    --schedule=/data/wger/beat/celerybeat-schedule
+    --schedule="${DATA_DIR}/beat/celerybeat-schedule"
+
+# Start nginx in the background. It listens on 8000 and proxies to gunicorn
+nginx
 
 echo "Starting wger..."
 exec gosu wger /home/wger/entrypoint.sh
