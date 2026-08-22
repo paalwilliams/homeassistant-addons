@@ -72,32 +72,10 @@ except OSError as error:
     exit 1
 fi
 
-# Reaching the port is not enough: wger's own bootstrap reports "Database does
-# not exist, creating one now" for a refused connection, a bad password and a
-# missing database alike, and then hangs. Say which one it actually is
-echo "Opening the ${DJANGO_DB_DATABASE:-wger} database as ${DJANGO_DB_USER:-wger}..."
-if ! gosu wger env HOME=/home/wger python3 -c "
-import os, sys
-
-import psycopg
-
-try:
-    psycopg.connect(
-        host=os.environ['DJANGO_DB_HOST'],
-        port=int(os.environ.get('DJANGO_DB_PORT') or 5432),
-        dbname=os.environ['DJANGO_DB_DATABASE'],
-        user=os.environ['DJANGO_DB_USER'],
-        password=os.environ.get('DJANGO_DB_PASSWORD', ''),
-        connect_timeout=10,
-    ).close()
-except Exception as error:
-    sys.exit(str(error).strip())
-"; then
-    echo "ERROR: postgres is listening, but wger cannot open its database."
-    echo "ERROR: the message above is postgres' own. Common causes:"
-    echo "ERROR:   'database ... does not exist' -> create it, owned by the wger role"
-    echo "ERROR:   'password authentication failed' -> DJANGO_DB_PASSWORD is wrong"
-    echo "ERROR:   'no pg_hba.conf entry' -> the server rejects this host"
+# Reaching the port is not enough: a wrong password, a missing database or a
+# missing powersync publication all surface as a hang or a wall of traceback
+if ! gosu wger env HOME=/home/wger /usr/local/bin/wger-db-check; then
+    echo "ERROR: wger cannot start until the database problem above is fixed."
     exit 1
 fi
 

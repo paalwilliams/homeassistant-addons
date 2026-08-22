@@ -17,6 +17,9 @@
   missing database fails with postgres' own error instead of hanging silently
 - Run a single gevent celery worker, matching upstream, instead of forking a
   prefork pool per core
+- Check for the powersync publication before starting. Migration `core.0023`
+  needs superuser to create it, and failed with a hundred lines of traceback
+- Document the full database setup, including the publication
 - Add a `CSRF_TRUSTED_ORIGINS` option
 
 ## 2.5.0

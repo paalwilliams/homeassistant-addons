@@ -36,7 +36,29 @@ This addon requires an external PostgreSQL database. You can use the
 [PostgreSQL addon](https://github.com/home-assistant/addons/tree/master/postgres)
 or any external PostgreSQL instance.
 
-Create a database and user for wger before starting the addon.
+Create the role and database as a superuser (`postgres`), from any database:
+
+```sql
+CREATE ROLE wger WITH LOGIN PASSWORD 'change-me';
+CREATE DATABASE wger WITH OWNER = wger ENCODING = 'UTF8' TEMPLATE = template0;
+```
+
+Then connect **to the `wger` database**, still as a superuser, and run:
+
+```sql
+CREATE PUBLICATION powersync FOR ALL TABLES;
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+CREATE EXTENSION IF NOT EXISTS btree_gin;
+GRANT ALL ON SCHEMA public TO wger;
+```
+
+The publication is the one that is easy to miss. Migration `core.0023` creates it
+for PowerSync (the mobile app's offline sync), and `FOR ALL TABLES` publications
+are superuser-only in PostgreSQL — owning the database is not enough. Creating it
+up front makes that migration a no-op, which is preferable to granting the `wger`
+role superuser. The extensions are needed by the full text search migration; they
+are trusted extensions on PostgreSQL 13+, so the migration can create them itself,
+but creating them here does no harm.
 
 ## Notes
 

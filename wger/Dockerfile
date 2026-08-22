@@ -21,6 +21,7 @@ RUN apt-get update \
 
 COPY nginx.conf /etc/nginx/conf.d/wger.conf
 COPY --chmod=755 gen-jwt-keys.py /usr/local/bin/wger-gen-jwt-keys
+COPY --chmod=755 db-check.py /usr/local/bin/wger-db-check
 COPY --chmod=755 run.sh /
 
 EXPOSE 8000
