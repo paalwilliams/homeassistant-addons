@@ -145,8 +145,11 @@ fi
 redis-server --daemonize yes --bind 127.0.0.1 --port 6379 \
     --dir /var/lib/redis --pidfile /var/run/redis/redis.pid
 
-# Start Celery worker in the background (as wger user)
+# Start Celery worker in the background (as wger user). Single gevent worker,
+# same as upstream's start-worker script: the prefork pool would fork one full
+# django process per core, which is a lot of contention on a small machine
 gosu wger env HOME=/home/wger celery -A wger worker --loglevel=info --detach \
+    --pool=gevent --concurrency=1 \
     --pidfile=/tmp/celery-worker.pid --logfile=/tmp/celery-worker.log
 
 # Start Celery beat in the background (as wger user)

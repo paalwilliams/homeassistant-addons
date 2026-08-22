@@ -14,6 +14,8 @@
   and is bounded by a timeout
 - Check that postgres is reachable before starting, and set `PGCONNECT_TIMEOUT`, so
   an unreachable database fails with a clear message instead of hanging silently
+- Run a single gevent celery worker, matching upstream, instead of forking a
+  prefork pool per core
 - Add a `CSRF_TRUSTED_ORIGINS` option
 
 ## 2.5.0
