@@ -46,6 +46,7 @@ config_export DOWNLOAD_EXERCISE_IMAGES_ON_STARTUP
 config_export ALLOW_GUEST_USERS
 config_export SITE_URL
 config_export CSRF_TRUSTED_ORIGINS
+config_export GUNICORN_CMD_ARGS
 config_export TZ
 if [ -n "${TZ:-}" ]; then
     export TIME_ZONE="${TZ}"
@@ -115,6 +116,14 @@ export NUMBER_OF_PROXIES="1"
 # request, and gunicorn is only reachable through it, so trusting them is safe
 export X_FORWARDED_PROTO_HEADER_SET="True"
 export USE_X_FORWARDED_HOST="True"
+
+# The entrypoint starts gunicorn with no worker options, and gunicorn defaults
+# to a single sync worker, which serves one request at a time. The frontend
+# fires several api calls per page, so they queue. Same values as upstream's
+# prod.env, overridable from the add-on options
+if [ -z "${GUNICORN_CMD_ARGS:-}" ]; then
+    export GUNICORN_CMD_ARGS="--workers 3 --threads 2 --worker-class gthread --timeout 240"
+fi
 
 # Bundled Redis for cache and Celery broker
 export DJANGO_CACHE_BACKEND="django_redis.cache.RedisCache"

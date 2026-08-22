@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.6.4
+
+- Run gunicorn with 3 gthread workers instead of gunicorn's default single sync
+  worker, which served one request at a time and made every page and every app
+  connection queue. Overridable with the new `GUNICORN_CMD_ARGS` option
+
 ## 2.6.3
 
 - Preserve an incoming `X-Forwarded-Proto` instead of overwriting it with the

@@ -1,5 +1,5 @@
 name: wger
-version: "2.6.3"
+version: "2.6.4"
 slug: wger
 boot: manual
 description: A free, open source web application for managing your workouts and nutrition.
@@ -29,6 +29,7 @@ schema:
   ALLOW_GUEST_USERS: bool?
   SITE_URL: str?
   CSRF_TRUSTED_ORIGINS: str?
+  GUNICORN_CMD_ARGS: str?
   TZ: str
 options:
   SECRET_KEY: ""
@@ -46,6 +47,7 @@ options:
   ALLOW_GUEST_USERS: true
   SITE_URL: "http://homeassistant.local:8000"
   CSRF_TRUSTED_ORIGINS: "http://homeassistant.local:8000"
+  GUNICORN_CMD_ARGS: ""
   TZ: America/Los_Angeles
 webui: http://[HOST]:[PORT:8000]
 legacy: true
