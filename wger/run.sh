@@ -49,6 +49,29 @@ if [ -n "${TZ:-}" ]; then
     export TIME_ZONE="${TZ}"
 fi
 
+# A missing route to postgres makes every step that loads django block on a TCP
+# connect that never completes, with no output at all. Fail fast and say why
+export PGCONNECT_TIMEOUT="10"
+
+db_host="$(config_get DJANGO_DB_HOST)"
+db_port="$(config_get DJANGO_DB_PORT)"
+db_port="${db_port:-5432}"
+
+echo "Checking that postgres is reachable at ${db_host}:${db_port}..."
+if ! python3 -c "
+import socket, sys
+try:
+    socket.create_connection(('${db_host}', ${db_port}), timeout=10).close()
+except OSError as error:
+    sys.exit(str(error))
+"; then
+    echo "ERROR: could not reach postgres at ${db_host}:${db_port}"
+    echo "ERROR: check the DJANGO_DB_HOST and DJANGO_DB_PORT options, that the"
+    echo "ERROR: database server is running, and that it accepts connections"
+    echo "ERROR: from this host."
+    exit 1
+fi
+
 # Persist a secret so it stays stable across restarts
 persist_secret() {
     touch "$SECRETS_FILE"

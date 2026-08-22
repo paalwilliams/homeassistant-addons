@@ -12,6 +12,8 @@
   and tokens survive restarts. The keypair is generated directly instead of through
   `manage.py`, so startup does not depend on the database or redis being reachable,
   and is bounded by a timeout
+- Check that postgres is reachable before starting, and set `PGCONNECT_TIMEOUT`, so
+  an unreachable database fails with a clear message instead of hanging silently
 - Add a `CSRF_TRUSTED_ORIGINS` option
 
 ## 2.5.0
