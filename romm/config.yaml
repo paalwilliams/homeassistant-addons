@@ -1,6 +1,6 @@
 name: RomM
 # renovate: image=rommapp/romm
-version: "5.3.1.1"
+version: "5.3.1.2"
 slug: romm
 boot: manual
 description: A beautiful, powerful ROM manager for your retro game collection.
@@ -34,6 +34,16 @@ schema:
   SCREENSCRAPER_PASSWORD: str?
   MOBYGAMES_API_KEY: str?
   STEAMGRIDDB_API_KEY: str?
+  OIDC_ENABLED: bool?
+  OIDC_PROVIDER: str?
+  OIDC_CLIENT_ID: str?
+  OIDC_CLIENT_SECRET: password?
+  OIDC_REDIRECT_URI: url?
+  OIDC_SERVER_APPLICATION_URL: url?
+  OIDC_SERVER_METADATA_URL: url?
+  OIDC_AUTOLOGIN: bool?
+  OIDC_ALLOW_REGISTRATION: bool?
+  DISABLE_USERPASS_LOGIN: bool?
   TZ: str
 options:
   ROMM_DB_DRIVER: mariadb

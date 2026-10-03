@@ -5,7 +5,7 @@ OPTIONS_FILE="/data/options.json"
 
 # Helper to read a config value from options.json
 config_get() {
-    python3 -c "import json; o=json.load(open('$OPTIONS_FILE')); v=o.get('$1',''); print(v if v is not None else '')"
+    python3 -c "import json; o=json.load(open('$OPTIONS_FILE')); v=o.get('$1',''); print('' if v is None else str(v).lower() if isinstance(v, bool) else v)"
 }
 
 # Helper to export a config value only if non-empty
@@ -40,6 +40,18 @@ config_export SCREENSCRAPER_USER
 config_export SCREENSCRAPER_PASSWORD
 config_export MOBYGAMES_API_KEY
 config_export STEAMGRIDDB_API_KEY
+
+# Single sign-on (OpenID Connect). RomM matches existing accounts by email
+config_export OIDC_ENABLED
+config_export OIDC_PROVIDER
+config_export OIDC_CLIENT_ID
+config_export OIDC_CLIENT_SECRET
+config_export OIDC_REDIRECT_URI
+config_export OIDC_SERVER_APPLICATION_URL
+config_export OIDC_SERVER_METADATA_URL
+config_export OIDC_AUTOLOGIN
+config_export OIDC_ALLOW_REGISTRATION
+config_export DISABLE_USERPASS_LOGIN
 
 # Timezone
 config_export TZ
