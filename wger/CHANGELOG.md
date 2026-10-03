@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.7.0.3
+
+- Fix PowerSync failing to log in to Postgres when the database password
+  contains characters that need escaping in a URI
+
 ## 2.7.0.2
 
 - Bundle PowerSync (1.26.1), the sync service the mobile app uses for training

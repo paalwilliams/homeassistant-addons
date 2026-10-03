@@ -1,6 +1,6 @@
 name: wger
 # renovate: image=wger/server
-version: "2.7.0.2"
+version: "2.7.0.3"
 slug: wger
 boot: manual
 description: A free, open source web application for managing your workouts and nutrition.

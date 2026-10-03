@@ -36,6 +36,8 @@ replication:
   connections:
     - type: postgresql
       uri: !env PS_DATABASE_URI
+      # Passed separately: PowerSync does not percent-decode passwords in a URI
+      password: !env PS_DATABASE_PASSWORD
 
       # Or use individual params
       # hostname: db # From the Docker Compose service name
@@ -53,6 +55,7 @@ replication:
 storage:
   type: postgresql
   uri: !env PS_STORAGE_PG_URI
+  password: !env PS_STORAGE_PASSWORD
   sslmode: disable
 
 # The port which the PowerSync API server will listen on
