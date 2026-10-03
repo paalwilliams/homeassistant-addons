@@ -1,5 +1,5 @@
 name: RomM
-version: "4.7.0"
+version: "4.7.0.0"
 slug: romm
 boot: manual
 description: A beautiful, powerful ROM manager for your retro game collection.

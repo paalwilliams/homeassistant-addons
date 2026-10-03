@@ -1,7 +1,8 @@
 # Changelog
 
-## 2.7.1
+## 2.7.0.1
 
+- Released as 2.7.1; renamed so the version follows `<upstream version>.<add-on revision>`
 - Run gunicorn as one worker with four threads instead of three workers
 - Run celery beat inside the celery worker (solo pool) instead of as its own process
 - Together this cuts memory use by about 350 MB

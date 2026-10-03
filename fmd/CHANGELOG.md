@@ -1,5 +1,9 @@
 <!-- https://developers.home-assistant.io/docs/add-ons/presentation#keeping-a-changelog -->
 
+## 0.17.0.0
+
+- Version now follows `<upstream version>.<add-on revision>`; no functional change
+
 ## 0.17.0
 
 - Update to FMD server 0.17.0 (adds API v2; API v1 still supported)

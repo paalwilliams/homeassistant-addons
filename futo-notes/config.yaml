@@ -1,5 +1,5 @@
 name: FUTO Notes
-version: "0.7.1"
+version: "0.7.1.0"
 slug: futo_notes
 description: End-to-end encrypted sync server for FUTO Notes
 url: "https://github.com/paalwilliams/homeassistant-addons"
