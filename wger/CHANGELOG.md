@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.7.1
+
+- Run gunicorn as one worker with four threads instead of three workers
+- Run celery beat inside the celery worker (solo pool) instead of as its own process
+- Together this cuts memory use by about 350 MB
+
 ## 2.7.0
 
 - Update to wger 2.7.0

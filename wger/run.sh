@@ -120,10 +120,12 @@ export USE_X_FORWARDED_HOST="True"
 
 # The entrypoint starts gunicorn with no worker options, and gunicorn defaults
 # to a single sync worker, which serves one request at a time. The frontend
-# fires several api calls per page, so they queue. Same values as upstream's
-# prod.env, overridable from the add-on options
+# fires several api calls per page, so they queue. One gthread worker with a
+# few threads serves those in parallel; every extra worker is another full
+# django process (~120 MB), which a single-user install does not need.
+# Overridable from the add-on options
 if [ -z "${GUNICORN_CMD_ARGS:-}" ]; then
-    export GUNICORN_CMD_ARGS="--workers 3 --threads 2 --worker-class gthread --timeout 240"
+    export GUNICORN_CMD_ARGS="--workers 1 --threads 4 --worker-class gthread --timeout 240"
 fi
 
 # Bundled Redis for cache and Celery broker
@@ -176,17 +178,14 @@ fi
 redis-server --daemonize yes --bind 127.0.0.1 --port 6379 \
     --dir /var/lib/redis --pidfile /var/run/redis/redis.pid
 
-# Start Celery worker in the background (as wger user). Single gevent worker,
-# same as upstream's start-worker script: the prefork pool would fork one full
-# django process per core, which is a lot of contention on a small machine
+# Start Celery worker in the background (as wger user). One task at a time:
+# the prefork pool would fork one full django process per core, which is a lot
+# of contention on a small machine. Beat runs embedded in the worker instead of
+# as its own django process; celery refuses that with gevent, hence solo
 gosu wger env HOME=/home/wger celery -A wger worker --loglevel=info --detach \
-    --pool=gevent --concurrency=1 \
+    --pool=solo --concurrency=1 \
+    --beat --schedule="${DATA_DIR}/beat/celerybeat-schedule" \
     --pidfile=/tmp/celery-worker.pid --logfile=/tmp/celery-worker.log
-
-# Start Celery beat in the background (as wger user)
-gosu wger env HOME=/home/wger celery -A wger beat --loglevel=info --detach \
-    --pidfile=/tmp/celery-beat.pid --logfile=/tmp/celery-beat.log \
-    --schedule="${DATA_DIR}/beat/celerybeat-schedule"
 
 # Start nginx in the background. It listens on 8000 and proxies to gunicorn
 nginx
