@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.7.0
+
+- Update to wger 2.7.0
+
 ## 2.6.5
 
 - Keep the exercise api cache warm (`CACHE_API_EXERCISES_CELERY`), and warm it
