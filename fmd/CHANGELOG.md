@@ -1,5 +1,9 @@
 <!-- https://developers.home-assistant.io/docs/add-ons/presentation#keeping-a-changelog -->
 
+## 0.17.0
+
+- Update to FMD server 0.17.0 (adds API v2; API v1 still supported)
+
 ## 0.16.0
 
 - Add a configurable `timezone` option (defaults to UTC) for local log timestamps
