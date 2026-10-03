@@ -1,4 +1,5 @@
 name: FUTO Notes
+# renovate: image=futotech/notes-server
 version: "0.7.1.0"
 slug: futo_notes
 description: End-to-end encrypted sync server for FUTO Notes

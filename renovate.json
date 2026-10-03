@@ -1,0 +1,65 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "dependencyDashboard": true,
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Base image tags in build.yaml",
+      "managerFilePatterns": [
+        "/(^|/)build\\.yaml$/"
+      ],
+      "matchStrings": [
+        "(?:aarch64|amd64|armv7):\\s*(?<depName>[^\\s:]+):(?<currentValue>[^\\s]+)"
+      ],
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "description": "Add-on version follows the image: <upstream version>.<add-on revision>, reset to .0 on bump",
+      "managerFilePatterns": [
+        "/(^|/)config\\.yaml$/"
+      ],
+      "matchStrings": [
+        "# renovate: image=(?<depName>\\S+)\\nversion: \"(?<currentValue>\\d+\\.\\d+\\.\\d+)\\.\\d+\""
+      ],
+      "datasourceTemplate": "docker",
+      "extractVersionTemplate": "^v?(?<version>\\d+\\.\\d+\\.\\d+)$",
+      "autoReplaceStringTemplate": "# renovate: image={{{depName}}}\nversion: \"{{{newValue}}}.0\""
+    }
+  ],
+  "packageRules": [
+    {
+      "matchFileNames": [
+        "audiobookshelf/**"
+      ],
+      "groupName": "audiobookshelf"
+    },
+    {
+      "matchFileNames": [
+        "fmd/**"
+      ],
+      "groupName": "fmd"
+    },
+    {
+      "matchFileNames": [
+        "futo-notes/**"
+      ],
+      "groupName": "futo-notes"
+    },
+    {
+      "matchFileNames": [
+        "romm/**"
+      ],
+      "groupName": "romm"
+    },
+    {
+      "matchFileNames": [
+        "wger/**"
+      ],
+      "groupName": "wger"
+    }
+  ]
+}

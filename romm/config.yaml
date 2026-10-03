@@ -1,4 +1,5 @@
 name: RomM
+# renovate: image=rommapp/romm
 version: "4.7.0.0"
 slug: romm
 boot: manual

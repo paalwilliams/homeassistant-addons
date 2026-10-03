@@ -1,4 +1,5 @@
 name: FMD
+# renovate: image=registry.gitlab.com/fmd-foss/fmd-server
 version: "0.17.0.0"
 slug: fmd
 boot: manual
