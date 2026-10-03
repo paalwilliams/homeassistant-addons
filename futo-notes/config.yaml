@@ -1,0 +1,23 @@
+name: FUTO Notes
+version: "0.7.1"
+slug: futo_notes
+description: End-to-end encrypted sync server for FUTO Notes
+url: "https://github.com/paalwilliams/homeassistant-addons"
+arch:
+  - amd64
+  - aarch64
+init: false
+boot: auto
+map:
+  - addon_config:rw
+ports:
+  3000/tcp: 3005
+ports_description:
+  3000/tcp: Sync server port
+webui: http://[HOST]:[PORT:3000]
+options:
+  password: ""
+  timezone: UTC
+schema:
+  password: password
+  timezone: str

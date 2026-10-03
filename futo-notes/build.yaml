@@ -1,0 +1,4 @@
+---
+build_from:
+  aarch64: futotech/notes-server:v0.7.1
+  amd64: futotech/notes-server:v0.7.1
