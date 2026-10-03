@@ -211,5 +211,34 @@ if [ "${WARMUP_EXERCISE_CACHE_ON_STARTUP:-True}" = "True" ]; then
     ) &
 fi
 
+# PowerSync, the mobile app's sync service. It replicates the wger database
+# (logical replication through the "powersync" publication) and keeps its own
+# state in the powersync schema, owned by the powersync_storage user. See README
+if [ "$(config_get POWERSYNC_ENABLED)" != "False" ]; then
+    pg_uri() {
+        python3 -c "import sys, urllib.parse as u; print(f'postgresql://{u.quote(sys.argv[1], safe=\"\")}:{u.quote(sys.argv[2], safe=\"\")}@{sys.argv[3]}:{sys.argv[4]}/{sys.argv[5]}')" "$@"
+    }
+    ps_password="$(config_get PS_STORAGE_PASSWORD)"
+    export PS_DATABASE_URI="$(pg_uri "$DJANGO_DB_USER" "$DJANGO_DB_PASSWORD" "$db_host" "$db_port" "$DJANGO_DB_DATABASE")"
+    export PS_STORAGE_PG_URI="$(pg_uri powersync_storage "$ps_password" "$db_host" "$db_port" "$DJANGO_DB_DATABASE")"
+    export PS_PORT="8080"
+    export PS_JWKS_URL="http://127.0.0.1:${WGER_PORT}/api/v2/powersync-keys"
+    export POWERSYNC_CONFIG_PATH="/etc/powersync/powersync.yaml"
+    if [ -z "$ps_password" ]; then
+        echo "WARNING: PS_STORAGE_PASSWORD is not set, the mobile app will not be able to sync."
+    fi
+    mkdir -p /opt/powersync/app/.probes
+    chown -R wger:wger /opt/powersync/app/.probes
+    (
+        cd /opt/powersync/app
+        while true; do
+            gosu wger env HOME=/home/wger NODE_ENV=production \
+                /opt/powersync/bin/node service/lib/entry.js start -r unified || true
+            echo "PowerSync exited, restarting in 10 seconds..."
+            sleep 10
+        done
+    ) &
+fi
+
 echo "Starting wger..."
 exec gosu wger env HOME=/home/wger /home/wger/entrypoint.sh

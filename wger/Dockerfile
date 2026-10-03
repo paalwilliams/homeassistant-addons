@@ -1,4 +1,8 @@
 ARG BUILD_FROM
+# The mobile app syncs through PowerSync, a separate node service in upstream's
+# compose stack. Bundle it from the official image instead of a second add-on
+FROM docker.io/journeyapps/powersync-service:1.26.1 AS powersync
+
 FROM ${BUILD_FROM}
 
 ARG BUILD_VERSION
@@ -20,6 +24,9 @@ RUN apt-get update \
     && chown -R wger:wger /var/lib/nginx /var/log/nginx
 
 COPY nginx.conf /etc/nginx/conf.d/wger.conf
+COPY --from=powersync /usr/local/bin/node /opt/powersync/bin/node
+COPY --from=powersync /app /opt/powersync/app
+COPY powersync /etc/powersync
 COPY --chmod=755 gen-jwt-keys.py /usr/local/bin/wger-gen-jwt-keys
 COPY --chmod=755 db-check.py /usr/local/bin/wger-db-check
 COPY --chmod=755 run.sh /

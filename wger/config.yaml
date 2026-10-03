@@ -1,6 +1,6 @@
 name: wger
 # renovate: image=wger/server
-version: "2.7.0.1"
+version: "2.7.0.2"
 slug: wger
 boot: manual
 description: A free, open source web application for managing your workouts and nutrition.
@@ -32,6 +32,8 @@ schema:
   SITE_URL: str?
   CSRF_TRUSTED_ORIGINS: str?
   GUNICORN_CMD_ARGS: str?
+  POWERSYNC_ENABLED: bool?
+  PS_STORAGE_PASSWORD: password?
   TZ: str
 options:
   SECRET_KEY: ""
@@ -51,6 +53,8 @@ options:
   SITE_URL: "http://homeassistant.local:8000"
   CSRF_TRUSTED_ORIGINS: "http://homeassistant.local:8000"
   GUNICORN_CMD_ARGS: ""
+  POWERSYNC_ENABLED: true
+  PS_STORAGE_PASSWORD: ""
   TZ: America/Los_Angeles
 webui: http://[HOST]:[PORT:8000]
 legacy: true

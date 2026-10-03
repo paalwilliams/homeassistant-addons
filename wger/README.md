@@ -77,3 +77,23 @@ but creating them here does no harm.
 - Exercise data is synced from wger.de in the background by Celery.
 - Media files are persisted in `/data/wger/media`, generated secrets in
   `/data/wger/secrets.env`.
+
+## PowerSync (mobile app sync)
+
+The mobile app loads training plans and syncs offline changes through
+PowerSync, which this add-on runs next to wger at `/ps/`. It needs logical
+replication and a separate storage user in the wger database. As the Postgres
+superuser:
+
+```sql
+ALTER SYSTEM SET wal_level = 'logical';  -- then restart Postgres
+ALTER ROLE wger REPLICATION;
+CREATE ROLE powersync_storage LOGIN PASSWORD '<password>';
+\c wger
+CREATE SCHEMA powersync AUTHORIZATION powersync_storage;
+GRANT CONNECT ON DATABASE wger TO powersync_storage;
+CREATE PUBLICATION powersync FOR ALL TABLES;  -- if not created yet
+```
+
+Put the password into the `PS_STORAGE_PASSWORD` option. Set `POWERSYNC_ENABLED`
+to false to run without it; the web interface works either way.

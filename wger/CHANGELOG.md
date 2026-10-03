@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.7.0.2
+
+- Bundle PowerSync (1.26.1), the sync service the mobile app uses for training
+  plans and offline sync, served at `/ps/`. Upstream runs it as a separate
+  container; here it runs next to wger and stops with it
+- New options `POWERSYNC_ENABLED` (default on) and `PS_STORAGE_PASSWORD`
+- Requires `wal_level = logical` and a `powersync_storage` user, see README
+
 ## 2.7.0.1
 
 - Released as 2.7.1; renamed so the version follows `<upstream version>.<add-on revision>`
