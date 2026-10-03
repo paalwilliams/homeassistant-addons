@@ -72,5 +72,11 @@ fi
 rm -rf /romm/library 2>/dev/null || true
 ln -sf /data/romm/library /romm/library 2>/dev/null || true
 
+# RomM starts 4 API workers and scans 4 ROMs at once by default, sized for
+# several concurrent users. Each worker is a full python process (~200 MB),
+# so a single-user install on a small machine runs one, and scans two at once
+export WEB_SERVER_CONCURRENCY=1
+export SCAN_WORKERS=2
+
 echo "Starting RomM..."
 exec /docker-entrypoint.sh /init
