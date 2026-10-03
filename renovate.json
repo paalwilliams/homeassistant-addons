@@ -4,6 +4,7 @@
     "config:recommended"
   ],
   "dependencyDashboard": true,
+  "dependencyDashboardApproval": false,
   "customManagers": [
     {
       "customType": "regex",
