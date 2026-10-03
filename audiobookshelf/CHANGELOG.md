@@ -1,5 +1,9 @@
 <!-- https://developers.home-assistant.io/docs/add-ons/presentation#keeping-a-changelog -->
 
+## 2.37.1
+
+- Update to audiobookshelf 2.37.1
+
 ## 1.2.0
 
 - Add an apparmor profile
