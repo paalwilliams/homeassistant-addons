@@ -1,6 +1,6 @@
 name: RomM
 # renovate: image=rommapp/romm
-version: "5.3.1.2"
+version: "5.4.0.0"
 slug: romm
 boot: manual
 description: A beautiful, powerful ROM manager for your retro game collection.
