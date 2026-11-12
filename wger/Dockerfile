@@ -1,7 +1,7 @@
 ARG BUILD_FROM
 # The mobile app syncs through PowerSync, a separate node service in upstream's
 # compose stack. Bundle it from the official image instead of a second add-on
-FROM docker.io/journeyapps/powersync-service:1.26.1 AS powersync
+FROM docker.io/journeyapps/powersync-service:1.28.3 AS powersync
 
 FROM ${BUILD_FROM}
 
